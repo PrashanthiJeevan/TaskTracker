@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>TaskCreator</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style>
+thead {
+color: white;
+background-color: blue;
+}
+
+tbody {
+color: black;
+}
+
+
+table, th, td {
+border: 1px solid black;
+padding: 7px;
+}
+
+.textbox {
+padding: 0 5px;
+line-height: 10px;
+width: 250px;
+height: 30px;
+}
+
+.title {
+font-family: Arial;
+font-size: x-large;
+text-align:left;
+margin-left:110px;
+}
+
+.title-version {
+font-family: Arial;
+text-align:left;
+margin-left:110px;
+font-size: smaller;
+}
+.padding-bottom{
+padding-bottom:25px;
+}
+.submit-button{
+    color: white;
+    background-color: black;
+    padding: 5px;
+	}
+</style>
+</head>
+<body>
+
+<div class="text-center padding-bottom"  id="titleTemplate">
+
+<div class="title"><h2>Task Tracker</h2></div>
+<div class="title-version"><h5>v2.0</h5></div>
+</div>
+	
+<div class="container">
+<div class="row">
+<div class="col-sm-6" id="createTasks">
+<table id="taskCreationTemplate" style="width:300px;">
+<tr>
+<td>
+<h3>Create a Task</h3>
+</td>
+</tr>
+<tr>
+<td>
+Task Name
+</td>
+</tr>
+<tr>
+<td>
+<input type="text" id="txtTaskName" name="txtTaskName" class="textbox" />
+</td>
+</tr>
+
+<tr>
+<td>
+Date
+</td>
+</tr>
+<tr>
+<td>
+<input type="datetime" id="dtCreatedDate" name="dtCreatedDate" class="textbox" />
+</td>
+</tr>
+
+<tr>
+<td>
+Assigned To
+</td>
+</tr>
+<tr>
+<td>
+<input type="text" id="txtAssignedTo" name="txtAssignedTo" class="textbox" />
+</td>
+</tr>
+<tr>
+<td>
+<input type="Submit" id="btnSubmit" class="submit-button" name="btnSubmit" value="Submit" onclick="taskSubmit();" />
+</td>
+</tr>
+</table>
+
+</div>
+<div class="col-sm-6" id="loadTasks">
+
+<h3 style="text-align:left">Existing Tasks</h3>
+
+<table id="existingtasks" style="width:600px;">
+<thead>
+<tr>
+<th>Assigned</th>
+<th>Date</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody id="taskList"></tbody>
+</table>
+
+</div>
+
+</div>
+</div>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+var tasks = [];
+$(document).ready(function () {
+//json data
+tasks = [
+{
+"assigned": "John Doe",
+"date": "12/01/2012",
+"name": "Test Task #1"
+},
+{
+"assigned": "John Doe",
+"date": "12/02/2012",
+"name": "Test Task #2"
+},
+{
+"assigned": "John Doe",
+"date": "12/03/2012",
+"name": "Test Task #3"
+},
+{
+"assigned": "John Doe",
+"date": "12/04/2012",
+"name": "Test Task #4"
+},
+{
+"assigned": "John Doe",
+"date": "12/05/2012",
+"name": "Test Task #5"
+},
+{
+"assigned": "John Doe",
+"date": "12/06/2012",
+"name": "Test Task #6"
+},
+{
+"assigned": "John Doe",
+"date": "12/07/2012",
+"name": "Test Task #7"
+}
+];
+
+//loading the static data
+tasksItem(tasks);
+});
+
+
+//Convert Json data to tbody format
+tasksItem = function (tasks) {
+debugger;
+$.each(tasks, function (index, item) {
+$('<tr>').html("<td>" + tasks[index].assigned +
+"</td><td>" + tasks[index].date +
+"</td><td>" + tasks[index].name +
+"</td>").appendTo('#taskList');
+});
+};
+
+//Binding the data to the tbody element on Submit event
+taskSubmit = function () {
+if($("#txtTaskName").val() === "" && $("#dtCreatedDate").val() === "" && $("#txtAssignedTo").val() === ""){
+alert("Please enter task details");
+return false;
+}
+var isRecordDuplicate = tasks.filter(x => x.assigned === $("#txtAssignedTo").val() && x.name === $("#txtTaskName").val() && x.date === $("#dtCreatedDate").val()).length;
+if(isRecordDuplicate === 0){
+var currentrow = "<tr><td>" + $("#txtTaskName").val() +
+   "</td><td>" + $("#dtCreatedDate").val() +
+   "</td><td>" + $("#txtAssignedTo").val() + "</td></tr>";
+
+//To handle the row to be inserted at the first of the tbody element
+$("#taskList").prepend("<tr><td>" + $("#txtTaskName").val() +
+   "</td><td>" + $("#dtCreatedDate").val() +
+   "</td><td>" + $("#txtAssignedTo").val() + "</td></tr>");
+   tasks.push({"assigned": $("#txtAssignedTo").val(),"date": $("#dtCreatedDate").val(),"name": $("#txtTaskName").val()});
+   $("#txtTaskName").val("");
+   $("#dtCreatedDate").val("");
+   $("#txtAssignedTo").val("");
+} else {
+alert("Duplicate Entry");
+}
+};
+
+</script>
+
+</body>
+</html>
